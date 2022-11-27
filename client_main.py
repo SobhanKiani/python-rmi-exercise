@@ -9,4 +9,4 @@ else:
 
 if __name__ == '__main__':
     client_stub = ClientStub('localhost', 9992)
-    
+    client_stub.print_message('HELLO')

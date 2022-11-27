@@ -13,37 +13,32 @@ class SkeletonBase(ABC):
         self.ip = ip
         self.class_name = class_name
         self.class_version = class_version
-        self.socket = None
+        self.sm = None
 
     def start(self,):
-        sm = SocketManager(self.registry_ip, self.registry_port)
-        sm.connect()
+        sm = SocketManager()
+        sm.bind(self.ip, self.port, 5)
+        print("Skeleton Started To Listen...")
         self.sm = sm 
         self.register()
-        # s.connect((self.registry_ip, self.registry_port))
-        # self.socket = s
-        # self.register()
 
         # ACCEPT REQUESTS FROM STUBS
         while True:
             self.stub_message_handler()
 
     def register(self):
+        register_sm = SocketManager(self.registry_ip, self.registry_port)
+        register_sm.connect()
+        # self.sm.set_ip_and_port(self.registry_ip, self.registry_port)
+        # self.sm.connect()
         register_message = {
             'ip': self.ip,
             'port': self.port,
             'class_name': self.class_name,
             'class_version': self.class_version
         }
-        register = SendingMessage(
-            register_message, MessageTypes.REGISTER_SERVER, 200)
-        
-        self.sm.set_message(register)
-        response = self.sm.send_message_and_get_response()
-        # self.socket.send(register.dumps())
-
-        # msg = self.socket.recv(1024)
-        # response = RecievingMessage(msg)
+        response = register_sm.send_message_and_get_response(register_message, MessageTypes.REGISTER_SERVER, 200)
+        register_sm.close()
         print(response.status_code, response.msg)
 
     @abstractmethod

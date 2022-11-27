@@ -17,26 +17,14 @@ class StubBase(ABC):
         pass
 
     def get_skeleton_address_from_registry(self, class_name, class_version):
-        # s = socket()
-        # s.connect((self.registry_ip, self.registry_port))
-        # findin_options = {
-        #     'class_name': class_name,
-        #     'class_version': class_version
-        # }
-        # sending = SendingMessage(findin_options, MessageTypes.FIND_SERVER, 200)
-        # s.send(sending.dumps())
-        # response = s.recv(1024)
-        # response = RecievingMessage(response)
-        # s.close()
-        
         findin_options = {
             'class_name': class_name,
             'class_version': class_version
         }
-        sending = SendingMessage(findin_options, MessageTypes.FIND_SERVER, 200)
-        sm = SocketManager(self.registry_ip, self.registry_port, sending)
+
+        sm = SocketManager(self.registry_ip, self.registry_port)
         sm.connect()
-        response = sm.send_message_and_get_response()
+        response = sm.send_message_and_get_response(findin_options, MessageTypes.FIND_SERVER, 200)
         sm.close()
 
         if response.status_code == 200:

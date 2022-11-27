@@ -1,6 +1,7 @@
 from .server_metadata import ServerMetaData
 from socket import socket
 from messages import RecievingMessage, SendingMessage, MessageTypes
+from socket_manager import SocketManager
 
 
 class ServerRegsitry:
@@ -8,6 +9,7 @@ class ServerRegsitry:
         self.ip = ip
         self.port = port
         self.servers = []
+        self.sm = None
 
     def add_server(self, serverMetaData: dict):
         new_server_metadata = ServerMetaData(**serverMetaData)
@@ -32,16 +34,20 @@ class ServerRegsitry:
         else:
             return 'SERVER_COULD_NOT_BE_FOUND', MessageTypes.SERVER_NOT_FOUND, 400
 
-
     def start(self):
-        s = socket()
-        s.bind((self.ip, self.port))
-        s.listen(5)
+
+        # s = socket()
+        # s.bind((self.ip, self.port))
+        # s.listen(5)
+        sm = SocketManager()
+        sm.bind(self.ip, self.port, 5)
+
         print("Service Registry Started To Listen...")
         while True:
-            c, _ = s.accept()
-            msg = c.recv(1024)
-            req = RecievingMessage(msg)
+            # c, _ = s.accept()
+            # msg = c.recv(1024)
+            # req = RecievingMessage(msg)
+            c, req = sm.recieve_message()
 
             if req.type == MessageTypes.REGISTER_SERVER:
                 res_message, res_status = self.add_server(req.msg)
