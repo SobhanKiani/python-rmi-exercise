@@ -3,6 +3,8 @@ from socket import socket
 from messages import SendingMessage, RecievingMessage, MessageTypes
 from socket_manager import SocketManager
 
+
+### Base functionalities of an Skeleton
 class SkeletonBase(ABC):
     registry_ip = 'localhost'
     registry_port = 9090
@@ -26,6 +28,7 @@ class SkeletonBase(ABC):
         while True:
             self.stub_message_handler()
 
+    ### Can change the name to bind
     def register(self):
         register_sm = SocketManager(self.registry_ip, self.registry_port)
         register_sm.connect()

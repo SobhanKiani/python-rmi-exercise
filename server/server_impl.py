@@ -1,4 +1,4 @@
-from .api import CustomAPI
+from application.api import CustomAPI
 
 class ServerImpl(CustomAPI):
 

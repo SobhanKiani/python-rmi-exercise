@@ -1,5 +1,5 @@
-from rmi.stub_base import StubBase
-from .api import CustomAPI
+from client.stub_base import StubBase
+from ..application.api import CustomAPI
 from socket_manager import SocketManager
 from messages import MessageTypes
 

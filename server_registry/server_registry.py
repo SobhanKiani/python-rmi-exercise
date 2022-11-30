@@ -36,17 +36,11 @@ class ServerRegsitry:
 
     def start(self):
 
-        # s = socket()
-        # s.bind((self.ip, self.port))
-        # s.listen(5)
         sm = SocketManager()
         sm.bind(self.ip, self.port, 5)
 
-        print("Service Registry Started To Listen...")
+        print("Server Registry Started...")
         while True:
-            # c, _ = s.accept()
-            # msg = c.recv(1024)
-            # req = RecievingMessage(msg)
             c, req = sm.recieve_message()
 
             if req.type == MessageTypes.REGISTER_SERVER:

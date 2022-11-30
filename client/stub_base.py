@@ -10,13 +10,10 @@ class StubBase(ABC):
     def __init__(self, ip, port) -> None:
         self.ip = ip
         self.port = port
-        self.get_skeleton_address_from_registry(
-            'Test', "1.0.0")
+        # self.lookup(
+        #     'Test', "1.0.0")
 
-    def send_invocation_to_skeleton(self):
-        pass
-
-    def get_skeleton_address_from_registry(self, class_name, class_version):
+    def lookup(self, class_name, class_version):
         findin_options = {
             'class_name': class_name,
             'class_version': class_version

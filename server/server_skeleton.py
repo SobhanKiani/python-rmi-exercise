@@ -1,18 +1,20 @@
 from .server_impl import ServerImpl
-from .api import CustomAPI
-from rmi.skeleton_base import SkeletonBase
+from application.api import CustomAPI
+from server.skeleton_base import SkeletonBase
 from messages import SendingMessage, MessageTypes
 
 ### Should i remove server_impl and impletment methods here
 ### Or I can remove CustomAPI and Implement evrything in server_impl
 ### Implementation should be a service for skeleton
-### Implementation should be seperated from skeletom
+### Implementation should be seperated from skeleton
 ### 1.So ServerSkeleton Can Change It's name to Server and implement methods here 
 ### (Couples Implmentation With Skeleton Functionalities)
 ### 2.ServerSkeleton Can Utilize ServerImpl As It's Object. 
 ### It may or may not extend CustomAPI
 ### * 3. The Other Approach Is That ServerSkeleton Can Extend ServerImpl Beside SkeletonBase
 ### Then The Name Can Change To Server
+
+### Result: ServerSkeleton is NOT responsible for implementation and should consider ServerImplementation
 
 class ServerSkeleton(SkeletonBase, CustomAPI):
     def __init__(self, port, ip):
