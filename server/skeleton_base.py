@@ -22,14 +22,15 @@ class SkeletonBase(ABC):
         sm.bind(self.ip, self.port, 5)
         print("Skeleton Started To Listen...")
         self.sm = sm 
-        self.register()
+        # self.bind()
 
         # ACCEPT REQUESTS FROM STUBS
-        while True:
-            self.stub_message_handler()
+        # while True:
+        #     self.stub_message_handler()
+        self.stub_message_handler()
 
     ### Can change the name to bind
-    def register(self):
+    def bind(self):
         register_sm = SocketManager(self.registry_ip, self.registry_port)
         register_sm.connect()
         # self.sm.set_ip_and_port(self.registry_ip, self.registry_port)
@@ -43,6 +44,8 @@ class SkeletonBase(ABC):
         response = register_sm.send_message_and_get_response(register_message, MessageTypes.REGISTER_SERVER, 200)
         register_sm.close()
         print(response.status_code, response.msg)
+        if response.status_code == 200:
+            self.start()
 
     @abstractmethod
     def stub_message_handler(self):

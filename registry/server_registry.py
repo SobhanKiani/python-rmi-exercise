@@ -1,7 +1,12 @@
-from .server_metadata import ServerMetaData
-from socket import socket
-from messages import RecievingMessage, SendingMessage, MessageTypes
 from socket_manager import SocketManager
+from messages import SendingMessage, MessageTypes
+import sys
+
+parent_module = sys.modules['.'.join(__name__.split('.')[:-1]) or '__main__']
+if __name__ == '__main__' or parent_module.__name__ == '__main__':
+    from server_metadata import ServerMetaData
+else:
+    from .server_metadata import ServerMetaData
 
 
 class ServerRegsitry:
