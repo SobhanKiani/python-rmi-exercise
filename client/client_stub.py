@@ -2,10 +2,15 @@ from client.stub_base import StubBase
 from application.api import CustomAPI
 from socket_manager import SocketManager
 from messages import MessageTypes
-
+import json
 # Client should use an object of this class
 # Client May And May Not Extend CustomAPI
 # But Client Stub Needs To Extends As It Needs To Implement The Remote Invocation For Each Method
+
+
+class TestObj:
+    def __init__(self, data) -> None:
+        self.data = data
 
 
 class ClientStub(StubBase, CustomAPI):
@@ -17,7 +22,11 @@ class ClientStub(StubBase, CustomAPI):
 
         invocation_msg = {
             'method_name': 'print_message',
-            'params': [{'name': 'msg', 'value': msg, 'type': 'str'}],
+            'params': [
+                {'name': 'msg', 'value': msg, 'type': 'str'},
+                {'name': 'obj', 'value': json.dumps(
+                    TestObj(data='Test Data').__dict__), 'type': 'ref', 'instanceof': 'TestObj'}
+            ],
         }
         sm.connect()
         response = sm.send_message_and_get_response(

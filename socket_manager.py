@@ -1,5 +1,5 @@
 from socket import socket
-from messages import Message, SendingMessage, RecievingMessage
+from messages import SendingMessage, RecievingMessage
 
 
 # class SocketManager:
@@ -49,7 +49,6 @@ class SocketManager:
 
     def send_message_without_response(self, msg, message_type: str, status_code: int):
         sending_message = SendingMessage(msg, message_type, status_code)
-        self.socket.send(self)
         self.socket.send(sending_message.dumps())
         self.socket.close()
 
@@ -68,7 +67,7 @@ class SocketManager:
         c, _ = self.socket.accept()
         recieved = c.recv(1024)
         recieved = RecievingMessage(recieved)
-        
+
         # What recived from who
         return c, recieved
 
