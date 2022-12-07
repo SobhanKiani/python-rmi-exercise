@@ -1,21 +1,37 @@
 from .server_impl import ServerImpl
-from application.api import CustomAPI
+from application.api import CourseAPI, Student
 from server.skeleton_base import SkeletonBase
 from messages import SendingMessage, MessageTypes
 from .utils import prepare_normal_paramter, prepare_ref_paramter
+import json
 
 
-class ServerSkeleton(SkeletonBase, CustomAPI):
+class ServerSkeleton(SkeletonBase, CourseAPI):
     def __init__(self, port, ip, obj: ServerImpl):
-        super().__init__(port, ip, 'Test', '1.0.0')
+        super().__init__(port, ip, 'Course', '1.0.0')
         self.server_impl = obj
 
-    def print_message(self, msg: str, obj):
-        # server_message should be sent back to the client
-        server_message = self.server_impl.print_message(msg, obj)
-        return server_message
+    def create(self, name: str, capacity: int, teacher_name: str):
+        return self.server_impl.create(name, capacity, teacher_name)
+
+    def add_student(self, student: Student, course_id: int):
+        return self.server_impl.add_student(student, course_id)
+
+    def remove_course(self, course_id: int):
+        return self.server_impl.remove_course(course_id)
+
+    def remove_student(self, student_id: int, course_id: int):
+        return self.server_impl.remove_student(student_id, course_id)
+
+    def change_capacity(self, course_id: int, new_capacity: int):
+        return self.server_impl.change_capacity(course_id, new_capacity)
+
+    def get_student_list(self, course_id: int):
+        return self.server_impl.get_student_list(course_id)
 
     # This Message Handler Calls The Functions By Correct Params
+    # Then returns the response to client stub
+
     def stub_message_handler(self):
         while True:
             c, req = self.sm.recieve_message()
@@ -28,8 +44,11 @@ class ServerSkeleton(SkeletonBase, CustomAPI):
                 else:
                     param_name, param_value = prepare_normal_paramter(param)
                     params[param_name] = param_value
-            res = function(**params)
+            msg, status = function(**params)
 
-            s = SendingMessage({"response": res},
-                               MessageTypes.FUNCTION_INVOCATION_RESPONSE, 200)
-            c.send(s.dumps())
+            if req.msg['method_name'] == 'get_student_list':
+                msg = [std.__dict__ for std in msg]
+
+            response = SendingMessage(msg,
+                                      MessageTypes.FUNCTION_INVOCATION_RESPONSE, status)
+            c.send(response.dumps())

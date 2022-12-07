@@ -1,9 +1,5 @@
 import json
-
-class TestObj:
-    def __init__(self, data) -> None:
-        self.data = data
-
+from application.classes import Course, Student
 
 def prepare_ref_paramter(ref_parameter):
     object_paramters_dict = json.loads(ref_parameter['value'])

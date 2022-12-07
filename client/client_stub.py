@@ -1,37 +1,84 @@
 from client.stub_base import StubBase
-from application.api import CustomAPI
-from socket_manager import SocketManager
-from messages import MessageTypes
+from application.api import CourseAPI
+from application.classes import Student
 import json
-# Client should use an object of this class
-# Client May And May Not Extend CustomAPI
-# But Client Stub Needs To Extends As It Needs To Implement The Remote Invocation For Each Method
 
 
-class TestObj:
-    def __init__(self, data) -> None:
-        self.data = data
+class ClientStub(StubBase, CourseAPI):
 
+    def create(self, name: str, capacity: str, teacher_name: str):
+        invocation_msg = {
+            'method_name': "create",
+            'params': [
+                {'name': 'name', 'value': name, 'type': 'str'},
+                {'name': 'capacity', 'value': capacity, 'type': 'int'},
+                {'name': 'teacher_name', 'value': teacher_name, 'type': 'str'},
+            ]
+        }
 
-class ClientStub(StubBase, CustomAPI):
+        response = self.invoke(invocation_msg)
 
-    # implement sending invocation to server skeleton
-    def print_message(self, msg: str) -> None:
-        sm = SocketManager(
-            self.skeleton_info['ip'], self.skeleton_info['port'])
+        # first index is text message
+        # second index is course id
+        return response.msg
+
+    def add_student(self, student: Student, course_id: int):
+        invocation_msg = {
+            'method_name': "add_student",
+            'params': [
+                {'name': 'student', 'value': json.dumps(
+                    student.__dict__), 'type': 'ref', 'instanceof': 'Student'},
+                {'name': 'course_id', 'value': course_id, 'type': 'int'},
+            ]
+        }
+
+        response = self.invoke(invocation_msg)
+        return response.msg
+
+    def remove_course(self, course_id: int):
+        invocation_msg = {
+            'method_name': "remove_course",
+            'params': [
+                {'name': 'course_id', 'value': course_id, 'type': 'int'},
+            ]
+        }
+        response = self.invoke(invocation_msg)
+        return response.msg
+
+    def remove_student(self, student_id: int, course_id: int):
+        invocation_msg = {
+            'method_name': 'remove_student',
+            'params': [
+                {'name': 'course_id', 'value': course_id, 'type': 'int'},
+                {'name': 'student_id', 'value': student_id, 'type': 'int'},
+            ]
+        }
+
+        response = self.invoke(invocation_msg)
+        return response.msg
+
+    def change_capacity(self, course_id: int, new_capacity: int):
 
         invocation_msg = {
-            'method_name': 'print_message',
+            'method_name': "change_capacity",
             'params': [
-                {'name': 'msg', 'value': msg, 'type': 'str'},
-                {'name': 'obj', 'value': json.dumps(
-                    TestObj(data='Test Data').__dict__), 'type': 'ref', 'instanceof': 'TestObj'}
-            ],
+                {'name': 'course_id', 'value': course_id, 'type': 'int'},
+                {'name': 'course_id', 'value': new_capacity, 'type': 'int'},
+            ]
         }
-        sm.connect()
-        response = sm.send_message_and_get_response(
-            invocation_msg, MessageTypes.FUNCTION_INVOCATION, 200)
-        print(response.msg)
-        if response.status_code == 200:
-            return response.msg
-        sm.close()
+
+        response = self.invoke(invocation_msg)
+        return response.msg
+
+    def get_student_list(self, course_id: int):
+        invocation_msg = {
+            'method_name': "get_student_list",
+            'params': [
+                {'name': 'course_id', 'value': course_id, 'type': 'int'},
+            ]
+        }
+
+        response = self.invoke(invocation_msg)
+        student_list = response.msg
+        studnet_list = [Student(**std) for std in student_list]
+        return studnet_list

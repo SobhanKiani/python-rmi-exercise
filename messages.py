@@ -15,7 +15,7 @@ class SendingMessage(Message):
         self.status_code = status_code
         
 
-    def dumps(self,):
+    def dumps(self):
         sending = {
             'msg': self.msg,
             'type': self.type,
