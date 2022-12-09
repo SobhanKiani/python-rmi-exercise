@@ -1,3 +1,4 @@
+# Each object of ServerMetaData stored information about running servers.
 class ServerMetaData:
     def __init__(self, ip, port, class_name, class_version):
         self.ip = ip

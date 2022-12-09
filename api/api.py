@@ -1,7 +1,7 @@
-from abc import ABC, abstractmethod, abstractstaticmethod
+from abc import ABC, abstractmethod
 from .classes import Student
 
-
+# Defining Methods That We Want To Invoke
 class CourseAPI(ABC):
 
     @abstractmethod
@@ -25,5 +25,5 @@ class CourseAPI(ABC):
         pass
 
     @abstractmethod
-    def get_student_list(self, course_id:int):
+    def get_student_list(self, course_id: int):
         pass

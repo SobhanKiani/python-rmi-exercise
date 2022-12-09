@@ -1,12 +1,13 @@
 import random
 
+# Application Classes
 
 class Student:
-    def __init__(self, name, id) -> None:
+    def __init__(self, name, id):
         self.name = name
         self.id = id
 
-    def to_string(self) -> str:
+    def to_string(self):
         return f'{self.id}:{self.name}'
 
 

@@ -16,12 +16,15 @@ class ServerRegsitry:
         self.servers = []
         self.sm = None
 
+    # handles add new server to servers
     def add_server(self, serverMetaData: dict):
         new_server_metadata = ServerMetaData(**serverMetaData)
         self.servers.append(new_server_metadata)
-        print("SERVER_ADDED_TO_REGISTRY")
+        print(
+            f"Server Registred IP {new_server_metadata.ip} and PORT {new_server_metadata.port} For Class {new_server_metadata.class_name}:{new_server_metadata.class_version}")
         return "SERVER_ADDED_TO_REGISTRY", 200
 
+    # find by class name and class version
     def find_server(self, class_name, class_version):
         found_server = None
         for server in self.servers:
@@ -39,6 +42,7 @@ class ServerRegsitry:
         else:
             return 'SERVER_COULD_NOT_BE_FOUND', MessageTypes.SERVER_NOT_FOUND, 400
 
+    # run Registry on the given port and ip address
     def start(self):
 
         sm = SocketManager()

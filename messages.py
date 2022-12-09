@@ -1,18 +1,17 @@
 import json
 
 
+# Base Message Properties
 class Message:
     def __init__(self, msg, type, status_code=200):
         self.msg = msg
         self.type = type
         self.status_code = status_code
 
-
+# Encasuplate Data Of Message That Are Being Sent By A Socket
 class SendingMessage(Message):
     def __init__(self, msg, type:str, status_code:int=200):
-        self.msg = msg
-        self.type = type
-        self.status_code = status_code
+        super().__init__(msg, type, status_code)
         
 
     def dumps(self):
@@ -23,18 +22,15 @@ class SendingMessage(Message):
         }
         return json.dumps(sending).encode('utf-8')
 
-
+# Encapsulat Data Of Messages That Are Being Received By A Socket
 class RecievingMessage(Message):
     def __init__(self, recieved_data:bytes):
         self.recieved_data = recieved_data.decode()
         loaded = json.loads(self.recieved_data)
-        self.msg = loaded['msg']
-        self.type = loaded['type']
-        self.status_code = loaded['status_code']
+        super().__init__(loaded['msg'], loaded['type'], loaded['status_code'])
 
 
-
-### MESSAGE TYPES ###
+# Different Message Types
 class MessageTypes:
     REGISTER_SERVER = 'REGISTER_SERVER'
     FIND_SERVER = 'FIND_SERVER'

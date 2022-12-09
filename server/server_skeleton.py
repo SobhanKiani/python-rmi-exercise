@@ -1,9 +1,12 @@
 from .server_impl import ServerImpl
-from application.api import CourseAPI, Student
+from api.api import CourseAPI
+from api.classes import Student, Course
 from server.skeleton_base import SkeletonBase
 from messages import SendingMessage, MessageTypes
-from .utils import prepare_normal_paramter, prepare_ref_paramter
 import json
+
+# Handles Server Connections To Registry And Client
+# Gets Requests From Client And Pass To ServerImpl Object
 
 
 class ServerSkeleton(SkeletonBase, CourseAPI):
@@ -29,9 +32,6 @@ class ServerSkeleton(SkeletonBase, CourseAPI):
     def get_student_list(self, course_id: int):
         return self.server_impl.get_student_list(course_id)
 
-    # This Message Handler Calls The Functions By Correct Params
-    # Then returns the response to client stub
-
     def stub_message_handler(self):
         while True:
             c, req = self.sm.recieve_message()
@@ -39,16 +39,31 @@ class ServerSkeleton(SkeletonBase, CourseAPI):
             params = {}
             for param in req.msg['params']:
                 if param['type'] == 'ref':
-                    param_name, param_value = prepare_ref_paramter(param)
+                    param_name, param_value = self.prepare_ref_paramter(param)
                     params[param_name] = param_value
                 else:
-                    param_name, param_value = prepare_normal_paramter(param)
+                    param_name, param_value = self.prepare_normal_paramter(
+                        param)
                     params[param_name] = param_value
             msg, status = function(**params)
 
             if req.msg['method_name'] == 'get_student_list':
                 msg = [std.__dict__ for std in msg]
 
+            
+            print(f"Invocation For {req.msg['method_name']} With Params: ")
+            print(params)
+            print("")
+
             response = SendingMessage(msg,
                                       MessageTypes.FUNCTION_INVOCATION_RESPONSE, status)
             c.send(response.dumps())
+
+    def prepare_ref_paramter(self, ref_parameter):
+        object_paramters_dict = json.loads(ref_parameter['value'])
+        class_name = eval(ref_parameter['instanceof'])
+        return ref_parameter['name'], class_name(**object_paramters_dict)
+
+    def prepare_normal_paramter(self, param):
+        param_type = eval(param['type'])
+        return param['name'], param_type(param['value'])

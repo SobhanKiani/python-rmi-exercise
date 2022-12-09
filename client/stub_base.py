@@ -13,6 +13,7 @@ class StubBase(ABC):
         # self.lookup(
         #     'Test', "1.0.0")
 
+    # Search for server in registry
     def lookup(self, class_name, class_version):
         findin_options = {
             'class_name': class_name,
@@ -37,6 +38,7 @@ class StubBase(ABC):
         print(self.skeleton_info['ip'], self.skeleton_info['port'])
         return response
 
+    # Handles invication logic
     def invoke(self, invocation_msg):
         sm = SocketManager(
             self.skeleton_info['ip'], self.skeleton_info['port']
@@ -46,5 +48,4 @@ class StubBase(ABC):
             invocation_msg, MessageTypes.FUNCTION_INVOCATION, 200)
         sm.close()
         return response
-        # if response.status_code == 200:
-        #     return response.msg
+        

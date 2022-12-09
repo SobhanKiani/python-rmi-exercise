@@ -3,10 +3,10 @@ import sys
 parent_module = sys.modules['.'.join(__name__.split('.')[:-1]) or '__main__']
 if __name__ == '__main__' or parent_module.__name__ == '__main__':
     from client.client_stub import ClientStub
-    from application.classes import Student
+    from api.classes import Student
 else:
     from .client.client_stub import ClientStub
-    from .application.classes import Student
+    from .api.classes import Student
 
 
 if __name__ == '__main__':

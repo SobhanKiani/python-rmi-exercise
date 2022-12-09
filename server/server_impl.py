@@ -1,9 +1,10 @@
-from application.api import CourseAPI
-from application.classes import Course, Student
+from api.api import CourseAPI
+from api.classes import Course, Student
 
-
+# Implements Objects Invocation Logic
 class ServerImpl(CourseAPI):
     def __init__(self) -> None:
+        # stores Course Objects Here
         self.course_list = []
 
     def create(self, name: str, capacity: int, teacher_name: str):

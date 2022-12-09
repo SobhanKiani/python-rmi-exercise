@@ -1,9 +1,9 @@
 from client.stub_base import StubBase
-from application.api import CourseAPI
-from application.classes import Student
+from api.api import CourseAPI
+from api.classes import Student
 import json
 
-
+# Each method send an invocation request to skeleton
 class ClientStub(StubBase, CourseAPI):
 
     def create(self, name: str, capacity: str, teacher_name: str):

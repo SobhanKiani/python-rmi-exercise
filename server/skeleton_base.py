@@ -4,7 +4,7 @@ from messages import SendingMessage, RecievingMessage, MessageTypes
 from socket_manager import SocketManager
 
 
-### Base functionalities of an Skeleton
+# Base functionalities of an Skeleton
 class SkeletonBase(ABC):
     registry_ip = 'localhost'
     registry_port = 9090
@@ -20,28 +20,27 @@ class SkeletonBase(ABC):
     def start(self,):
         sm = SocketManager()
         sm.bind(self.ip, self.port, 5)
+        
         print("Skeleton Started To Listen...")
-        self.sm = sm 
-        # self.bind()
+        print("")
 
-        # ACCEPT REQUESTS FROM STUBS
-        # while True:
-        #     self.stub_message_handler()
+        self.sm = sm
+
         self.stub_message_handler()
 
-    ### Can change the name to bind
+    # Can change the name to bind
     def bind(self):
         register_sm = SocketManager(self.registry_ip, self.registry_port)
         register_sm.connect()
-        # self.sm.set_ip_and_port(self.registry_ip, self.registry_port)
-        # self.sm.connect()
+
         register_message = {
             'ip': self.ip,
             'port': self.port,
             'class_name': self.class_name,
             'class_version': self.class_version
         }
-        response = register_sm.send_message_and_get_response(register_message, MessageTypes.REGISTER_SERVER, 200)
+        response = register_sm.send_message_and_get_response(
+            register_message, MessageTypes.REGISTER_SERVER, 200)
         register_sm.close()
         print(response.status_code, response.msg)
         if response.status_code == 200:
