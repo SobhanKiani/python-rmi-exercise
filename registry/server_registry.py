@@ -47,8 +47,8 @@ class ServerRegsitry:
 
         sm = SocketManager()
         sm.bind(self.ip, self.port, 5)
-
         print("Server Registry Started...")
+        
         while True:
             c, req = sm.recieve_message()
 

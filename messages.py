@@ -25,9 +25,12 @@ class SendingMessage(Message):
 # Encapsulat Data Of Messages That Are Being Received By A Socket
 class RecievingMessage(Message):
     def __init__(self, recieved_data:bytes):
-        self.recieved_data = recieved_data.decode()
-        loaded = json.loads(self.recieved_data)
-        super().__init__(loaded['msg'], loaded['type'], loaded['status_code'])
+        try:
+            self.recieved_data = recieved_data.decode()
+            loaded = json.loads(self.recieved_data)
+            super().__init__(loaded['msg'], loaded['type'], loaded['status_code'])
+        except:
+            pass
 
 
 # Different Message Types

@@ -1,5 +1,5 @@
 from threading import Thread
-from typing import Any, Callable, Iterable, Mapping
+
 
 
 class CustomThread(Thread):
@@ -17,13 +17,3 @@ class CustomThread(Thread):
     def join(self, *args):
         Thread.join(self, *args)
         return self._return
-
-
-# def hanlder():
-#     return 125
-
-
-# t = CustomThread(target=hanlder)
-# t.start()
-# t.join()
-# print(t._return)
